@@ -1,12 +1,18 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-
+﻿/// <summary>
+/// Port of WPF UniformGrid control to UWP. In the Microsoft UWP examples on GitHub, see the XamlUIBasics project. They have a custom WrapPanel included in the project.
+/// I took that code and combined it with a reverse compile of the the WPF UniformGrid control to get the code below.
+/// January 20, 2016
+/// RickApps.com
+/// </summary>
 namespace UniformGridForUWP
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using Windows.Foundation;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+
     /// <summary>
     /// Provides a way to arrange content in a grid where all the cells in the grid have the same size.
     /// </summary>
@@ -87,6 +93,11 @@ namespace UniformGridForUWP
 
         #endregion
 
+        /// <summary>
+        /// Validity check on row or column. For now, just check that it is positive. This code could be much simplified.
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
         private static void OnRowsColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             UniformGrid source = (UniformGrid)d;
@@ -116,6 +127,12 @@ namespace UniformGridForUWP
             source.InvalidateMeasure();
         }
 
+        /// <summary>
+        /// Check that the offset is positive. This seems to be the only check in the WPF uniform grid.
+        /// Might also make the offset be less than the number of items included in the grid.
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
         private static void OnFirstColumnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             UniformGrid source = (UniformGrid)d;
@@ -146,8 +163,7 @@ namespace UniformGridForUWP
         }
 
         /// <summary>
-        /// Initializes a new instance of the
-        /// <see cref="T:WinRTXamlToolkit.Controls.WrapPanel" /> class.
+        /// Initializes a new instance of the UniformGrid.
         /// </summary>
         public UniformGrid()
         {
@@ -169,9 +185,9 @@ namespace UniformGridForUWP
             int count = base.Children.Count;
             while (i < count)
             {
-                UIElement expr_5C = base.Children[i];
-                expr_5C.Measure(availableSize);
-                Size desiredSize = expr_5C.DesiredSize;
+                UIElement element = base.Children[i];
+                element.Measure(availableSize);
+                Size desiredSize = element.DesiredSize;
                 if (num < desiredSize.Width)
                 {
                     num = desiredSize.Width;
@@ -196,10 +212,10 @@ namespace UniformGridForUWP
             double width = finalRect.Width;
             double num = finalSize.Width - 1.0;
             finalRect.X += finalRect.Width * (double)this.FirstColumn;
-            foreach (UIElement expr_87 in base.Children)
+            foreach (UIElement element in base.Children)
             {
-                expr_87.Arrange(finalRect);
-                if (expr_87.Visibility != Visibility.Collapsed)
+                element.Arrange(finalRect);
+                if (element.Visibility != Visibility.Collapsed)
                 {
                     finalRect.X += width;
                     if (finalRect.X >= num)
@@ -212,6 +228,10 @@ namespace UniformGridForUWP
             return finalSize;
         }
 
+        /// <summary>
+        /// If no row count or column count is specified, use the smallest square number that will contain all the items
+        /// as our dimensions. Otherwise, calculate the number of rows or columns needed to contain all items.
+        /// </summary>
         private void UpdateComputedValues()
         {
             this._columns = this.Columns;

@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("UniformGridForUWP")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Port of WPF UniformGrid control to UWP")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("RickApps.com")]
 [assembly: AssemblyProduct("UniformGridForUWP")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
